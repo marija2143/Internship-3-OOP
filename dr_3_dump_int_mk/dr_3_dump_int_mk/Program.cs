@@ -488,21 +488,20 @@ namespace dr_3_dump_int_mk
         static void Function_6(Dictionary<Project, List<Task>> dict, int choice) 
         {
             Console.Clear();
-            var proj_ = new Project();
-            
+
+            Console.WriteLine("Odaberite projekt: ");
+            var idx = 1;
+            foreach (var item in dict)
+            {
+                Console.WriteLine(idx + " - " + item.Key.title);
+                idx++;
+            }
+            var show = Check_Menu(dict.Count) - 1;
+            int idx2 = 0;
             switch (choice)
             {
                 case 1:
                     //show tasks
-                    Console.WriteLine("Odaberite projekt: ");
-                    var idx = 1;
-                    foreach (var item in dict)
-                    {
-                        Console.WriteLine(idx+" - "+item.Key.title);
-                        idx++;
-                    }
-                    var show = Check_Menu(dict.Count)-1;
-                    int idx2 = 0;
                     foreach (var item in dict)
                     {
                         if (idx2 == show)
@@ -518,15 +517,6 @@ namespace dr_3_dump_int_mk
                     break;
                 case 2:
                     //show details
-                    Console.WriteLine("Odaberite projekt: ");
-                    idx = 1;
-                    foreach (var item in dict)
-                    {
-                        Console.WriteLine(idx + " - " + item.Key.title);
-                        idx++;
-                    }
-                    show = Check_Menu(dict.Count)-1;
-                    idx2 = 0;
                     foreach (var item in dict)
                     {
                         if (idx2 == show)
@@ -542,15 +532,6 @@ namespace dr_3_dump_int_mk
                     break;
                 case 3:
                     //edit status
-                    Console.WriteLine("Odaberite projekt: ");
-                    idx = 1;
-                    foreach (var item in dict)
-                    {
-                        Console.WriteLine(idx + " - " + item.Key.title);
-                        idx++;
-                    }
-                    show = Check_Menu(dict.Count) - 1;
-                    idx2 = 0;
                     foreach (var item in dict)
                     {
                         if (idx2 == show)
@@ -609,15 +590,6 @@ namespace dr_3_dump_int_mk
                     break;
                 case 4:
                     //add task
-                    Console.WriteLine("Odaberite projekt: ");
-                    idx = 1;
-                    foreach (var item in dict)
-                    {
-                        Console.WriteLine(idx + " - " + item.Key.title);
-                        idx++;
-                    }
-                    show = Check_Menu(dict.Count) - 1;
-                    idx2 = 0;
                     foreach (var item in dict)
                     {
                         if (idx2 == show)
@@ -631,15 +603,6 @@ namespace dr_3_dump_int_mk
                     break;
                 case 5:
                     //delete task
-                    Console.WriteLine("Odaberite projekt: ");
-                    idx = 1;
-                    foreach (var item in dict)
-                    {
-                        Console.WriteLine(idx + " - " + item.Key.title);
-                        idx++;
-                    }
-                    show = Check_Menu(dict.Count) - 1;
-                    idx2 = 0;
                     foreach (var item in dict) 
                     {
                         if (idx2 == show)
@@ -658,15 +621,6 @@ namespace dr_3_dump_int_mk
                     break;
                 case 6:
                     //show time needed to finish all active tasks
-                    Console.WriteLine("Odaberite projekt: ");
-                    idx = 1;
-                    foreach (var item in dict)
-                    {
-                        Console.WriteLine(idx + " - " + item.Key.title);
-                        idx++;
-                    }
-                    show = Check_Menu(dict.Count)-1;
-                    idx2 = 0;
                     foreach (var item in dict)
                     {
                         if (idx2 == show)
