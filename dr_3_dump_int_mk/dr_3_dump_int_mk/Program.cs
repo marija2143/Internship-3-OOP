@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using dr_3_dump_int_mk.enums;
 namespace dr_3_dump_int_mk
 {
     class Program
@@ -50,18 +51,18 @@ namespace dr_3_dump_int_mk
             var list_p1 = new List<Task>();
             var list_p2 = new List<Task>();
 
-            var proj1 = new Project("Titula 1", "Opis 1", DateTime.Parse("01/11/2024"), DateTime.Parse("15/07/2025"), "aktivan");
-            var proj2 = new Project("Titula 2", "Opis 2", DateTime.Parse("02/11/2024"), DateTime.Parse("25/12/2025"), "na cekanju");
+            var proj1 = new Project("Titula 1", "Opis 1", DateTime.Parse("01/11/2024"), DateTime.Parse("15/07/2025"), Status.aktivan);
+            var proj2 = new Project("Titula 2", "Opis 2", DateTime.Parse("02/11/2024"), DateTime.Parse("25/12/2025"), Status.naCekanju);
 
-            var task1 = new Task("Titula 1 1", "Opis 1 1", DateTime.Parse("11/5/2025"), 150, "aktivan", proj1);
-            var task2 = new Task("Titula 1 2", "Opis 1 2", DateTime.Parse("25/11/2024"), 130, "aktivan", proj1);
-            var task3 = new Task("Titula 1 3", "Opis 1 3", DateTime.Parse("12/12/2024"), 120, "aktivan", proj1);
+            var task1 = new Task("Titula 1 1", "Opis 1 1", DateTime.Parse("11/5/2025"), 150, Status.aktivan, proj1);
+            var task2 = new Task("Titula 1 2", "Opis 1 2", DateTime.Parse("25/11/2024"), 130, Status.aktivan, proj1);
+            var task3 = new Task("Titula 1 3", "Opis 1 3", DateTime.Parse("12/12/2024"), 120, Status.aktivan, proj1);
             list_p1.Add(task1);
             list_p1.Add(task2);
             list_p1.Add(task3);
 
-            var task4 = new Task("Titula 2 1", "Opis 2 1", DateTime.Parse("27/11/2024"), 111, "aktivan", proj2);
-            var task5 = new Task("Titula 2 2", "Opis 2 2", DateTime.Parse("25/5/2025"), 250, "aktivan", proj2);
+            var task4 = new Task("Titula 2 1", "Opis 2 1", DateTime.Parse("27/11/2024"), 111, Status.aktivan, proj2);
+            var task5 = new Task("Titula 2 2", "Opis 2 2", DateTime.Parse("25/5/2025"), 250, Status.aktivan, proj2);
             list_p2.Add(task4);
             list_p2.Add(task5);
 
@@ -92,6 +93,7 @@ namespace dr_3_dump_int_mk
             DateTime start = new();
             DateTime end = new();
             string status = "";
+            Status stat_ = Status.aktivan;
 
             while (incorrectInput)
             {
@@ -203,6 +205,14 @@ namespace dr_3_dump_int_mk
                         var ex2 = new Exception("Neispravan unos, status mora biti aktivan, zavrsen ili na cekanju");
                         throw ex2;
                     }
+                    if (status=="na cekanju")
+                    {
+                        stat_ = Status.naCekanju;
+                    }
+                    if (status == "zavrsen")
+                    {
+                        stat_ = Status.zavrsen;
+                    }
                     incorrectInput = false;
                 }
                 catch (Exception e)
@@ -211,7 +221,7 @@ namespace dr_3_dump_int_mk
                 }
             }
 
-            var new_project = new Project(title, desc, start, end, status);
+            var new_project = new Project(title, desc, start, end, stat_);
             return new_project;
         }
         static Project Function_3(Dictionary<Project, List<Task>> dict)
@@ -275,7 +285,7 @@ namespace dr_3_dump_int_mk
                 foreach (var val in item.Value)
                 {
                     var days = val.deadline - DateTime.Now;
-                    if (days.TotalDays< 7 && item.Key.status == "aktivan")
+                    if (days.TotalDays< 7 && item.Key.status == Status.aktivan)
                     {
                         Console.WriteLine($"{item.Key.title} - {val.title}  => {days.ToString()}");
                     }
@@ -288,6 +298,7 @@ namespace dr_3_dump_int_mk
             Console.WriteLine("---Prikaz projekta po statusu---");
             bool incorrectInput = true;
             var status = "";
+            Status stat_=Status.aktivan;
             while (incorrectInput)
             {
                 Console.WriteLine("Unesite status (aktivan, zavrsen, na cekanju) koji zelite pregledati: ");
@@ -304,6 +315,14 @@ namespace dr_3_dump_int_mk
                         var ex2 = new Exception("Neispravan unos, status mora biti aktivan, zavrsen ili na cekanju");
                         throw ex2;
                     }
+                    if (status == "na cekanju")
+                    {
+                        stat_ = Status.naCekanju;
+                    }
+                    if (status == "zavrsen")
+                    {
+                        stat_ = Status.zavrsen;
+                    }
                     incorrectInput = false;
                 }
                 catch (Exception e)
@@ -315,7 +334,7 @@ namespace dr_3_dump_int_mk
             {
                 Console.WriteLine(item.Key.status);
                 Console.WriteLine(status);
-                if (item.Key.status==status)
+                if (item.Key.status==stat_)
                 {
                     Console.WriteLine(item.Key.title + " - " + item.Key.status);
                 }
@@ -404,7 +423,7 @@ namespace dr_3_dump_int_mk
                             var time_left = 0;
                             foreach (var val in item.Value)
                             {
-                                if (val.status == "aktivan")
+                                if (val.status == Status.aktivan)
                                 {
                                     time_left += val.workload;
                                 }

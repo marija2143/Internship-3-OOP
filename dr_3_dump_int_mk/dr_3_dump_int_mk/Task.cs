@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using dr_3_dump_int_mk.enums;
 
 namespace dr_3_dump_int_mk
 {
@@ -15,13 +16,13 @@ namespace dr_3_dump_int_mk
         //deadline
         public DateTime deadline;
         //status active, on hold or done
-        public string status;
+        public Status status;
         //expected work time in minutes
         public int workload;
 
         //related project
         public Project project;
-        public Task(string title_, string description_, DateTime deadline_,int workload_ ,string status_,Project project_)
+        public Task(string title_, string description_, DateTime deadline_,int workload_ ,Status status_,Project project_)
         {
             this.title = title_;
             this.description = description_;
