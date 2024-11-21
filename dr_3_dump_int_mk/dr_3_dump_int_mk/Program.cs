@@ -485,7 +485,7 @@ namespace dr_3_dump_int_mk
                 return new_task;
             
         }
-        static Project Function_6(Dictionary<Project, List<Task>> dict, int choice) 
+        static void Function_6(Dictionary<Project, List<Task>> dict, int choice) 
         {
             Console.Clear();
             var proj_ = new Project();
@@ -688,9 +688,7 @@ namespace dr_3_dump_int_mk
                 default:
                     break;
             }
-            return proj_;
         }
-        //finish 5
 
         static void Functions_Choice(int main_choice,string[] sub_menu_6, string[] sub_menu_7, Dictionary<Project, List<Task>> dict_)
         {
@@ -731,7 +729,7 @@ namespace dr_3_dump_int_mk
                         Console.WriteLine($"{i + 1}) {sub_menu_6[i]}");
                     }
                     var sub_6_choice = Check_Menu(sub_menu_6.Length);
-                    var project_ = Function_6(dict_,sub_6_choice);
+                    Function_6(dict_,sub_6_choice);
                     Go_Back(dict_);
                     break;
                 case 7:
@@ -755,6 +753,7 @@ namespace dr_3_dump_int_mk
                     break;
             }
         }
+       //finish 7
         static void Start(Dictionary<Project, List<Task>> dict_start) 
         {
             //declaring string arrays for (sub)menus
