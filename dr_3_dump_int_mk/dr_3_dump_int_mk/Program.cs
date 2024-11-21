@@ -332,14 +332,158 @@ namespace dr_3_dump_int_mk
             }
             foreach (var item in dict)
             {
-                Console.WriteLine(item.Key.status);
-                Console.WriteLine(status);
                 if (item.Key.status==stat_)
                 {
                     Console.WriteLine(item.Key.title + " - " + item.Key.status);
                 }
             }
 
+        }
+        static Task Add_Task(List<Task> tasklist, Project proj) 
+        {
+            bool incorrectInput = true;
+            string title = "";
+            string desc = "";
+            DateTime deadline = new();
+            int work_ = 0;
+            string status = "";
+            Status stat_ = Status.aktivan;
+
+                while (incorrectInput)
+                {
+                    Console.WriteLine("Unesite titulu: ");
+                    title = Console.ReadLine();
+                    try
+                    {
+                        if (title.Trim() == "")
+                        {
+                            var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                            throw ex1;
+                        }
+                        bool in_list = false;
+                        foreach (var item in tasklist)
+                        {
+                            if (item.title == title)
+                            {
+                                in_list = true; break;
+
+                            }
+                        }
+                        if (in_list)
+                        {
+                            var ex2 = new Exception("Neispravan unos, projekt vec postoji");
+                            throw ex2;
+                        }
+                        incorrectInput = false;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                incorrectInput = true;
+                while (incorrectInput)
+                {
+                    Console.WriteLine("Unesite opis: ");
+                    desc = Console.ReadLine();
+                    try
+                    {
+                        if (desc.Trim() == "")
+                        {
+                            var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                            throw ex1;
+                        }
+                        incorrectInput = false;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                incorrectInput = true;
+                while (incorrectInput)
+                {
+                    Console.WriteLine("Unesite datum roka (DD/MM/GGGG): ");
+                    var d = DateTime.TryParse(Console.ReadLine(), out deadline);
+                    try
+                    {
+                        if (d == false)
+                        {
+                            var ex1 = new Exception("Neispravan unos, nije tocan format datuma");
+                            throw ex1;
+                        }
+                        incorrectInput = false;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                incorrectInput = true;
+                while (incorrectInput)
+                {
+                    Console.WriteLine("Unesite trajanje u minutama: ");
+                    var mins = int.TryParse(Console.ReadLine(), out work_);
+                    try
+                    {
+                        if (mins == false)
+                        {
+                            var ex1 = new Exception("Neispravan unos, nije tocan format, treba biti cijeli broj");
+                            throw ex1;
+                        }
+                    if (work_<=0)
+                    {
+                        var ex2 = new Exception("Neispravan unos, nije tocan format, treba biti NENEGATIVAN cijeli broj, odnosno prirodni broj");
+                        throw ex2;
+
+                    }
+                        incorrectInput = false;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                incorrectInput = true;
+                while (incorrectInput)
+                {
+                    Console.WriteLine("Unesite status (aktivan, zavrsen, na cekanju): ");
+                    status = Console.ReadLine().Trim();
+                    try
+                    {
+                        if (status == "")
+                        {
+                            var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                            throw ex1;
+                        }
+                        if (status != "aktivan" && status != "zavrsen" && status != "na cekanju")
+                        {
+                            var ex2 = new Exception("Neispravan unos, status mora biti aktivan, zavrsen ili na cekanju");
+                            throw ex2;
+                        }
+                        if (status == "na cekanju")
+                        {
+                            stat_ = Status.naCekanju;
+                        }
+                        if (status == "zavrsen")
+                        {
+                            stat_ = Status.zavrsen;
+                        }
+                        incorrectInput = false;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                var new_task = new Task(title, desc, deadline ,work_, stat_,proj);
+                return new_task;
+            
         }
         static Project Function_6(Dictionary<Project, List<Task>> dict, int choice) 
         {
@@ -398,12 +542,119 @@ namespace dr_3_dump_int_mk
                     break;
                 case 3:
                     //edit status
+                    Console.WriteLine("Odaberite projekt: ");
+                    idx = 1;
+                    foreach (var item in dict)
+                    {
+                        Console.WriteLine(idx + " - " + item.Key.title);
+                        idx++;
+                    }
+                    show = Check_Menu(dict.Count) - 1;
+                    idx2 = 0;
+                    foreach (var item in dict)
+                    {
+                        if (idx2 == show)
+                        {
+                            Console.WriteLine("Odaberite novi status: ");
+                            var key = item.Key;
+                            switch (key.status)
+                            {
+                                case Status.aktivan:
+                                    Console.WriteLine("1) Na cekanju\n2) Zavrsen");
+                                    var s = Check_Menu(2);
+                                    if (s==1)
+                                    {
+                                        key.status = Status.naCekanju;
+                                    }
+                                    else {
+                                        key.status = Status.zavrsen;
+                                        foreach (var val in item.Value)
+                                        {
+                                            val.status = Status.zavrsen;
+                                        }
+                                    }
+                                    break;
+                                case Status.naCekanju:
+
+                                    Console.WriteLine("1) Aktivan\n2) Zavrsen");
+                                    s= Check_Menu(2);
+                                    if (s == 1)
+                                    {
+                                        key.status = Status.aktivan;
+                                    }
+                                    else {
+                                        key.status = Status.zavrsen;
+                                        foreach (var val in item.Value)
+                                        {
+                                            val.status = Status.zavrsen;
+                                        }
+                                    }
+                                    break;
+                                case Status.zavrsen:
+                                    Console.WriteLine("1) Na cekanju\n2) Aktivan");
+                                    s = Check_Menu(2);
+                                    if (s == 1)
+                                    {
+                                        key.status = Status.naCekanju;
+                                    }
+                                    else { key.status = Status.aktivan; }
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                        else idx2++;
+                    }
                     break;
                 case 4:
                     //add task
+                    Console.WriteLine("Odaberite projekt: ");
+                    idx = 1;
+                    foreach (var item in dict)
+                    {
+                        Console.WriteLine(idx + " - " + item.Key.title);
+                        idx++;
+                    }
+                    show = Check_Menu(dict.Count) - 1;
+                    idx2 = 0;
+                    foreach (var item in dict)
+                    {
+                        if (idx2 == show)
+                        {
+                            var new_task = Add_Task(item.Value,item.Key);
+                            item.Value.Add(new_task);
+                            break;
+                        }
+                        else idx2++;
+                    }
                     break;
                 case 5:
                     //delete task
+                    Console.WriteLine("Odaberite projekt: ");
+                    idx = 1;
+                    foreach (var item in dict)
+                    {
+                        Console.WriteLine(idx + " - " + item.Key.title);
+                        idx++;
+                    }
+                    show = Check_Menu(dict.Count) - 1;
+                    idx2 = 0;
+                    foreach (var item in dict) 
+                    {
+                        if (idx2 == show)
+                        {
+                            Console.WriteLine("Odaberite zadatak po broju: ");
+                            for (int i = 0; i < item.Value.Count; i++)
+                            {
+                                Console.WriteLine($"{i + 1}) {item.Value[i].title}");
+                            }
+                            var ind = Check_Menu(item.Value.Count) - 1;
+                            item.Value.RemoveAt(ind);
+                            break;
+                        }
+                        else idx2++;
+                    }
                     break;
                 case 6:
                     //show time needed to finish all active tasks
@@ -439,7 +690,7 @@ namespace dr_3_dump_int_mk
             }
             return proj_;
         }
-        //finish 3 4 5
+        //finish 5
 
         static void Functions_Choice(int main_choice,string[] sub_menu_6, string[] sub_menu_7, Dictionary<Project, List<Task>> dict_)
         {
@@ -523,22 +774,6 @@ namespace dr_3_dump_int_mk
             var main_choice = Check_Menu(main_menu.Length+1);
 
             Functions_Choice(main_choice, sub_menu_6, sub_menu_7,dict_start);
-            //            Pri implementaciji je važno vodit računa da dva projekta ne smiju imat isti naziv,
-            //            te unutar projekta dva zadatka ne smiju imat isti naziv.
-            //
-            //            Ukoliko je zadatak ili projekt “završen” ne mogu se mijenjati podaci,
-            //            niti se u “završen” projekt može dodavat nove zadatke.
-            //
-            //            Kada se svi zadaci unutar projekta označe kao “završeni” projekt automatski postaje “završen”. 
-            //
-            //            Prilikom unosa novih zadataka i projekata bitno je validirati unos, npr. naziv zadatka ne može ostat prazan.
-            //
-            //            U slučaju pogrešnog unosa ispisati odgovarajuću poruku, te omogućiti ponovni unos. 
-            //
-            //            Pri brisanju zadatka ili projekta potrebno je prikazati potvrdni dijalog s pitanjem želi li zaista izbrisati taj zadatak, tj. projekt.
-            //
-            //          Potrebno je da prilikom pokretanja aplikacije postoje inicijalni podaci s kojima je moguće obavljati sve navedene funkcionalnosti koje aplikacija nudi.
-            //          Isto tako aplikacije ne smije “pucati” prilikom korištenja.
         }
 
         static void Main(string[] args)
