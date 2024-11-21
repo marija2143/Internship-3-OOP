@@ -322,11 +322,108 @@ namespace dr_3_dump_int_mk
             }
 
         }
+        static Project Function_6(Dictionary<Project, List<Task>> dict, int choice) 
+        {
+            Console.Clear();
+            var proj_ = new Project();
+            
+            switch (choice)
+            {
+                case 1:
+                    //show tasks
+                    Console.WriteLine("Odaberite projekt: ");
+                    var idx = 1;
+                    foreach (var item in dict)
+                    {
+                        Console.WriteLine(idx+" - "+item.Key.title);
+                        idx++;
+                    }
+                    var show = Check_Menu(dict.Count)-1;
+                    int idx2 = 0;
+                    foreach (var item in dict)
+                    {
+                        if (idx2 == show)
+                        {
+                            foreach (var val in item.Value)
+                            {
+                                Console.WriteLine(val.title+" - "+val.description+" - "+val.status);
+                            }
+                            break;
+                        }
+                        else idx2++;
+                    }
+                    break;
+                case 2:
+                    //show details
+                    Console.WriteLine("Odaberite projekt: ");
+                    idx = 1;
+                    foreach (var item in dict)
+                    {
+                        Console.WriteLine(idx + " - " + item.Key.title);
+                        idx++;
+                    }
+                    show = Check_Menu(dict.Count)-1;
+                    idx2 = 0;
+                    foreach (var item in dict)
+                    {
+                        if (idx2 == show)
+                        {
+                            var key = item.Key;
+                            Console.WriteLine($"Naslov: {key.title}\n" +
+                                $"Opis: {key.description}\nPocetk: {key.start_time}\n" +
+                                $"Kraj: {key.end_time}\nStatus: {key.status}");
+                            break;
+                        }
+                        else idx2++;
+                    }
+                    break;
+                case 3:
+                    //edit status
+                    break;
+                case 4:
+                    //add task
+                    break;
+                case 5:
+                    //delete task
+                    break;
+                case 6:
+                    //show time needed to finish all active tasks
+                    Console.WriteLine("Odaberite projekt: ");
+                    idx = 1;
+                    foreach (var item in dict)
+                    {
+                        Console.WriteLine(idx + " - " + item.Key.title);
+                        idx++;
+                    }
+                    show = Check_Menu(dict.Count)-1;
+                    idx2 = 0;
+                    foreach (var item in dict)
+                    {
+                        if (idx2 == show)
+                        {
+                            var time_left = 0;
+                            foreach (var val in item.Value)
+                            {
+                                if (val.status == "aktivan")
+                                {
+                                    time_left += val.workload;
+                                }
+                            }
+                            Console.WriteLine("Vrijeme potrebna za dovrsavanje zadataka: " + time_left + " minuta");
+                            break;
+                        }
+                        else idx2++;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return proj_;
+        }
+        //finish 3 4 5
 
         static void Functions_Choice(int main_choice,string[] sub_menu_6, string[] sub_menu_7, Dictionary<Project, List<Task>> dict_)
         {
-            //starting dictionary , key project, value tasklist
-
             switch (main_choice)
             {
                 case 1:
@@ -364,7 +461,8 @@ namespace dr_3_dump_int_mk
                         Console.WriteLine($"{i + 1}) {sub_menu_6[i]}");
                     }
                     var sub_6_choice = Check_Menu(sub_menu_6.Length);
-                    Console.WriteLine("opcija 6");
+                    var project_ = Function_6(dict_,sub_6_choice);
+                    Go_Back(dict_);
                     break;
                 case 7:
                     //option 7 - editing specific task
