@@ -18,7 +18,7 @@ namespace dr_3_dump_int_mk
         public DateTime end_time;
         //status active, on hold or done
         public string status;
-
+        public Project() { }
         public Project(string title_,string description_, DateTime start_, DateTime end_, string status_)
         {
             this.title = title_;

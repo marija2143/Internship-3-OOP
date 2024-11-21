@@ -6,6 +6,13 @@ namespace dr_3_dump_int_mk
 {
     class Program
     {
+        static void Go_Back(Dictionary<Project, List<Task>> dict)
+        {
+            Console.WriteLine("Pritisnite bilo koju tipku za nastavak");
+            Console.ReadKey();
+            Console.Clear();
+            Start(dict);
+        }
         static int Check_Menu(int biggest_option)
         {
             bool incorrectInput = true;
@@ -43,8 +50,8 @@ namespace dr_3_dump_int_mk
             var list_p1 = new List<Task>();
             var list_p2 = new List<Task>();
 
-            var proj1 = new Project("Titula 1", "Opis 1", DateTime.Parse("01/11/2024"), DateTime.Parse("15/07/2025"), "active");
-            var proj2 = new Project("Titula 2", "Opis 2", DateTime.Parse("02/11/2024"), DateTime.Parse("25/012/2025"), "active");
+            var proj1 = new Project("Titula 1", "Opis 1", DateTime.Parse("01/11/2024"), DateTime.Parse("15/07/2025"), "aktivan");
+            var proj2 = new Project("Titula 2", "Opis 2", DateTime.Parse("02/11/2024"), DateTime.Parse("25/12/2025"), "na cekanju");
 
             var task1 = new Task("Titula 1 1", "Opis 1 1", DateTime.Parse("11/5/2025"), 150, "aktivan", proj1);
             var task2 = new Task("Titula 1 2", "Opis 1 2", DateTime.Parse("25/11/2024"), 130, "aktivan", proj1);
@@ -53,7 +60,7 @@ namespace dr_3_dump_int_mk
             list_p1.Add(task2);
             list_p1.Add(task3);
 
-            var task4 = new Task("Titula 2 1", "Opis 2 1", DateTime.Parse("15/12/2024"), 111, "aktivan", proj2);
+            var task4 = new Task("Titula 2 1", "Opis 2 1", DateTime.Parse("27/11/2024"), 111, "aktivan", proj2);
             var task5 = new Task("Titula 2 2", "Opis 2 2", DateTime.Parse("25/5/2025"), 250, "aktivan", proj2);
             list_p2.Add(task4);
             list_p2.Add(task5);
@@ -63,32 +70,291 @@ namespace dr_3_dump_int_mk
 
             return start_dict;
         }
-        static void Functions_Choice(int main_choice,string[] sub_menu_6, string[] sub_menu_7)
+        static void Function_1(Dictionary<Project, List<Task>> dict)
+        {
+            Console.Clear();
+            foreach (var item in dict)
+            {
+                Console.WriteLine(item.Key.title);
+                foreach (var val in item.Value)
+                {
+                    Console.WriteLine("\t" + val.title);
+                }
+            }
+            Go_Back(dict);
+        }
+        static Project Function_2(Dictionary<Project, List<Task>> dict)
+        {
+            Console.Clear();
+            bool incorrectInput = true;
+            string title = "";
+            string desc = "";
+            DateTime start = new();
+            DateTime end = new();
+            string status = "";
+
+            while (incorrectInput)
+            {
+                Console.WriteLine("Unesite titulu: ");
+                title = Console.ReadLine();
+                try
+                {
+                    if (title.Trim()=="")
+                    {
+                        var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                        throw ex1;
+                    }
+                    bool in_dict=false;
+                    foreach (var item in dict.Keys)
+                    {
+                        if (item.title==title)
+                        {
+                            in_dict = true; break;
+
+                        }
+                    }
+                    if (in_dict)
+                    {
+                        var ex2 = new Exception("Neispravan unos, projekt vec postoji");
+                        throw ex2;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+            incorrectInput = true;
+            while (incorrectInput)
+            {
+                Console.WriteLine("Unesite opis: ");
+                desc = Console.ReadLine();
+                try
+                {
+                    if (desc.Trim() == "")
+                    {
+                        var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                        throw ex1;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+            incorrectInput = true;
+            while (incorrectInput)
+            {
+                Console.WriteLine("Unesite datum pocetka (DD/MM/GGGG): ");
+                var s = DateTime.TryParse(Console.ReadLine(), out start);
+                try
+                {
+                    if (s==false)
+                    {
+                        var ex1 = new Exception("Neispravan unos, nije tocan format datuma");
+                        throw ex1;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+            incorrectInput = true;
+            while (incorrectInput)
+            {
+                Console.WriteLine("Unesite datum kraja (DD/MM/GGGG): ");
+                var e_ = DateTime.TryParse(Console.ReadLine(), out end);
+                try
+                {
+                    if (e_ == false)
+                    {
+                        var ex1 = new Exception("Neispravan unos, nije tocan format datuma");
+                        throw ex1;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+            incorrectInput = true;
+            while (incorrectInput)
+            {
+                Console.WriteLine("Unesite status (aktivan, zavrsen, na cekanju): ");
+                status = Console.ReadLine().Trim();
+                try
+                {
+                    if (status == "")
+                    {
+                        var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                        throw ex1;
+                    }
+                    if (status!="aktivan" && status != "zavrsen" && status != "na cekanju")
+                    {
+                        var ex2 = new Exception("Neispravan unos, status mora biti aktivan, zavrsen ili na cekanju");
+                        throw ex2;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+            var new_project = new Project(title, desc, start, end, status);
+            return new_project;
+        }
+        static Project Function_3(Dictionary<Project, List<Task>> dict)
+        {
+            Console.Clear();
+            Console.WriteLine("Projekti: ");
+            int idx = 1;
+            foreach (var item in dict)
+            {
+                Console.WriteLine(idx + " - " + item.Key.title);
+                idx++;
+            }
+            var delete = Check_Menu(dict.Count)-1;
+            Project proj_ = new();
+            int idx2 = 0;
+            foreach (var item in dict)
+            {
+                if (idx2 == delete)
+                {
+                    proj_ = item.Key;
+                    break;
+                }
+                else idx2++;
+            }
+            bool incorrectInput = true;
+            bool safety = true;
+            while (incorrectInput)
+            {
+                try 
+                {
+                    Console.WriteLine($"Jeste li sigurni da zelite izbrisati projekt {proj_.title} ? (Y/N)");
+                    var response = Console.ReadLine().Trim();
+                    if (response.ToLower()!="y" && response.ToLower()!="n")
+                    {
+                        var ex = new Exception("Odaberite Y za da ili N za ne");
+                        throw ex;
+                    }
+                    if (response.ToLower()=="y")
+                    {
+                        safety = false;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            if (safety)
+            {
+                proj_ = new();
+            }
+            return proj_;
+        }
+        static void Function_4(Dictionary<Project, List<Task>> dict)
+        {
+            Console.Clear();
+            Console.WriteLine("Zadaci kojima je rok u sljedecih 7 dana: ");
+            foreach (var item in dict)
+            {
+                foreach (var val in item.Value)
+                {
+                    var days = val.deadline - DateTime.Now;
+                    if (days.TotalDays< 7 && item.Key.status == "aktivan")
+                    {
+                        Console.WriteLine($"{item.Key.title} - {val.title}  => {days.ToString()}");
+                    }
+                }
+            }
+        }
+        static void Function_5(Dictionary<Project, List<Task>> dict)
+        {
+            Console.Clear();
+            Console.WriteLine("---Prikaz projekta po statusu---");
+            bool incorrectInput = true;
+            var status = "";
+            while (incorrectInput)
+            {
+                Console.WriteLine("Unesite status (aktivan, zavrsen, na cekanju) koji zelite pregledati: ");
+                status = Console.ReadLine().Trim();
+                try
+                {
+                    if (status == "")
+                    {
+                        var ex1 = new Exception("Neispravan unos, ne smije biti prazno polje");
+                        throw ex1;
+                    }
+                    if (status != "aktivan" && status != "zavrsen" && status != "na cekanju")
+                    {
+                        var ex2 = new Exception("Neispravan unos, status mora biti aktivan, zavrsen ili na cekanju");
+                        throw ex2;
+                    }
+                    incorrectInput = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            foreach (var item in dict)
+            {
+                Console.WriteLine(item.Key.status);
+                Console.WriteLine(status);
+                if (item.Key.status==status)
+                {
+                    Console.WriteLine(item.Key.title + " - " + item.Key.status);
+                }
+            }
+
+        }
+
+        static void Functions_Choice(int main_choice,string[] sub_menu_6, string[] sub_menu_7, Dictionary<Project, List<Task>> dict_)
         {
             //starting dictionary , key project, value tasklist
-            var dict = GetStarted();
 
             switch (main_choice)
             {
                 case 1:
                     //option 1 - list projects + related tasks
-                    Console.WriteLine("opcija 1");
+                    Function_1(dict_);
                     break;
                 case 2:
                     //option 2 - add new project
-                    Console.WriteLine("opcija 2");
+                    var new_project=Function_2(dict_);
+                    var task_list = new List<Task>();
+                    dict_.Add(new_project, task_list);
+                    Go_Back(dict_);
                     break;
                 case 3:
                     //option 3 - delete project
-                    Console.WriteLine("opcija 3");
+                    var project_delete=Function_3(dict_);
+                    dict_.Remove(project_delete);
+                    Go_Back(dict_);
                     break;
                 case 4:
                     //option 4 - show all tasks with deadline within the next 7 days
-                    Console.WriteLine("opcija 4");
+                    Function_4(dict_);
+                    Go_Back(dict_);
                     break;
                 case 5:
                     //option 5 - show projects filtered by status
-                    Console.WriteLine("opcija 5");
+                    Function_5(dict_);
+                    Go_Back(dict_);
                     break;
                 case 6:
                     //option 6 - editing specific project
@@ -111,6 +377,8 @@ namespace dr_3_dump_int_mk
                     Console.WriteLine("opcija 7");
                     break;
                 case 8:
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.Black;
                     Console.Clear();
                     Console.WriteLine("Dovidenja! Pritisnite bilo koju tipku za izlaz.");
                     Environment.Exit(0);
@@ -119,7 +387,7 @@ namespace dr_3_dump_int_mk
                     break;
             }
         }
-        static void Start() 
+        static void Start(Dictionary<Project, List<Task>> dict_start) 
         {
             //declaring string arrays for (sub)menus
             string[] main_menu = {"Projekti i zadaci","Dodaj novi projekt","Izbrisi projekt","Zadaci s rokom u sljedecih 7 dana",
@@ -137,7 +405,7 @@ namespace dr_3_dump_int_mk
             Console.WriteLine((main_menu.Length+1)+" - Izlaz");
             var main_choice = Check_Menu(main_menu.Length+1);
 
-            Functions_Choice(main_choice, sub_menu_6, sub_menu_7);
+            Functions_Choice(main_choice, sub_menu_6, sub_menu_7,dict_start);
             //            Pri implementaciji je važno vodit računa da dva projekta ne smiju imat isti naziv,
             //            te unutar projekta dva zadatka ne smiju imat isti naziv.
             //
@@ -158,7 +426,9 @@ namespace dr_3_dump_int_mk
 
         static void Main(string[] args)
         {
-            Start();
+            //loading starting dictionary
+            var dict_start = GetStarted();
+            Start(dict_start);
         }
     }
 }
