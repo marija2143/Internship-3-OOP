@@ -572,13 +572,7 @@ namespace dr_3_dump_int_mk
                                     }
                                     break;
                                 case Status.zavrsen:
-                                    Console.WriteLine("1) Na cekanju\n2) Aktivan");
-                                    s = Check_Menu(2);
-                                    if (s == 1)
-                                    {
-                                        key.status = Status.naCekanju;
-                                    }
-                                    else { key.status = Status.aktivan; }
+                                    Console.WriteLine("Projekt je zavrsen. Status se ne moze mijenjati.");
                                     break;
                                 default:
                                     break;
@@ -811,7 +805,6 @@ namespace dr_3_dump_int_mk
                     break;
             }
         }
-       //finish 7
         static void Start(Dictionary<Project, List<Task>> dict_start) 
         {
             //declaring string arrays for (sub)menus
