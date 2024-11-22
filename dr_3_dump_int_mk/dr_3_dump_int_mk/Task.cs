@@ -19,7 +19,6 @@ namespace dr_3_dump_int_mk
         public Status status;
         //expected work time in minutes
         public int workload;
-
         //related project
         public Project project;
         public Task(string title_, string description_, DateTime deadline_,int workload_ ,Status status_,Project project_)
@@ -30,7 +29,6 @@ namespace dr_3_dump_int_mk
             this.status = status_;
             this.workload=workload_;
             this.project = project_;
-
         }
     }
 }

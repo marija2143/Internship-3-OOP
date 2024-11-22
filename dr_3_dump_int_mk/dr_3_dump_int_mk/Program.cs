@@ -62,7 +62,7 @@ namespace dr_3_dump_int_mk
             list_p1.Add(task3);
 
             var task4 = new Task("Titula 2 1", "Opis 2 1", DateTime.Parse("27/11/2024"), 111, Status.aktivan, proj2);
-            var task5 = new Task("Titula 2 2", "Opis 2 2", DateTime.Parse("25/5/2025"), 250, Status.aktivan, proj2);
+            var task5 = new Task("Titula 2 2", "Opis 2 2", DateTime.Parse("25/5/2025"), 250, Status.zavrsen, proj2);
             list_p2.Add(task4);
             list_p2.Add(task5);
 
@@ -523,7 +523,7 @@ namespace dr_3_dump_int_mk
                         {
                             var key = item.Key;
                             Console.WriteLine($"Naslov: {key.title}\n" +
-                                $"Opis: {key.description}\nPocetk: {key.start_time}\n" +
+                                $"Opis: {key.description}\nPocetak: {key.start_time}\n" +
                                 $"Kraj: {key.end_time}\nStatus: {key.status}");
                             break;
                         }
@@ -643,6 +643,109 @@ namespace dr_3_dump_int_mk
                     break;
             }
         }
+        static void Function_7(Dictionary<Project, List<Task>> dict, int choice)
+        {
+
+            Console.Clear();
+
+            Console.WriteLine("Odaberite projekt: ");
+            var idx = 1;
+            foreach (var item in dict)
+            {
+                Console.WriteLine(idx + " - " + item.Key.title);
+                idx++;
+            }
+            var show = Check_Menu(dict.Count) - 1;
+            int idx2 = 0;
+            List<Task> tasklist = new();
+            var idx3 = 1;
+            foreach (var item in dict)
+            {
+                if (idx2 == show)
+                {
+                    tasklist = item.Value;
+                    foreach (var val in item.Value)
+                    {
+                        Console.WriteLine(idx3 +" - "+ val.title);
+                        idx3++;
+                    }
+                    break;
+                }
+                else idx2++;
+            }
+            int choice_task = Check_Menu(tasklist.Count)-1;
+            var task = tasklist[choice_task];
+            switch (choice)
+            {
+                case 1:
+                    Console.WriteLine($"Naslov: {task.title}\n" +
+                    $"Opis: {task.description}\nRok: {task.deadline}\n" +
+                    $"Trajanje: {task.workload} minuta\nStatus: {task.status.ToString()}");
+                    break;
+                case 2:
+                    Console.WriteLine("Odaberite novi status: ");
+                    switch (task.status)
+                    {
+                        case Status.aktivan:
+                            Console.WriteLine("1) Na cekanju\n2) Zavrsen");
+                            var s = Check_Menu(2);
+                            if (s == 1)
+                            {
+                                task.status = Status.naCekanju;
+                            }
+                            else
+                            {
+                                task.status = Status.zavrsen;
+                            }
+                            break;
+                        case Status.naCekanju:
+
+                            Console.WriteLine("1) Aktivan\n2) Zavrsen");
+                            s = Check_Menu(2);
+                            if (s == 1)
+                            {
+                                task.status = Status.aktivan;
+                            }
+                            else
+                            {
+                                task.status = Status.zavrsen;
+                            }
+                            break;
+                        case Status.zavrsen:
+                            Console.WriteLine("Ovaj zadatak je zavrsen. Status se ne moze mijenjati.");
+                            break;
+                        default:
+                            break;
+                    }
+                    for (int i = 0; i < dict.Count; i++)
+                    {
+                        if (i == show)
+                        {
+                            var title_ = dict.ElementAt(i).Key;
+                            dict[title_] = tasklist;
+                            for(int j = 0; j < tasklist.Count; j++)
+                            {
+                                if (tasklist[j].status!=Status.zavrsen)
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    if (j==tasklist.Count-1 && tasklist[j].status==Status.zavrsen)
+                                    {
+                                        title_.status = Status.zavrsen;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        else continue;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         static void Functions_Choice(int main_choice,string[] sub_menu_6, string[] sub_menu_7, Dictionary<Project, List<Task>> dict_)
         {
@@ -694,7 +797,8 @@ namespace dr_3_dump_int_mk
                         Console.WriteLine($"{i + 1}) {sub_menu_7[i]}");
                     }
                     var sub_7_choice = Check_Menu(sub_menu_7.Length);
-                    Console.WriteLine("opcija 7");
+                    Function_7(dict_, sub_7_choice);
+                    Go_Back(dict_); 
                     break;
                 case 8:
                     Console.BackgroundColor = ConsoleColor.Yellow;
